@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b5d3b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>KOMPTA – Gestion & abonnements</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f3f7f4;--cd:#fff;--ink:#10201a;--mut:#58695f;--g:#0b5d3b;--on:#fff;--gl:#e2f1e9;--ln:#dbe6df;--rd:#b3261e;--rl:#fdecea;--am:#7a5200;--al:#fff2d1;--hd:#0b5d3b;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1511;--cd:#14211b;--ink:#e8f1ec;--mut:#9db0a5;--g:#3ccf90;--on:#062b1a;--gl:#173226;--ln:#243a30;--rd:#ff8a80;--rl:#3b1a17;--am:#f1c765;--al:#3a2c08;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c1511;--cd:#14211b;--ink:#e8f1ec;--mut:#9db0a5;--g:#3ccf90;--on:#062b1a;--gl:#173226;--ln:#243a30;--rd:#ff8a80;--rl:#3b1a17;--am:#f1c765;--al:#3a2c08;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--hd);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+header h1{margin:0;font-size:21px;letter-spacing:.04em}
+.bd{font-size:12px;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:99px}
+main{max-width:640px;margin:0 auto;padding:14px 14px 100px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--cd);border-top:1px solid var(--ln);display:grid;grid-template-columns:repeat(7,1fr);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{background:none;border:0;color:var(--mut);font-size:10.5px;font-weight:600;line-height:1.2;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;min-height:48px;border-radius:10px}
+nav button span{font-size:20px}
+nav [aria-current=page]{color:var(--g);background:var(--gl)}
+button{font-family:inherit;font-size:15px;min-height:44px;border-radius:12px;border:1px solid var(--ln);background:var(--cd);color:var(--ink);padding:0 14px;cursor:pointer}
+.pri{background:var(--g);color:var(--on);border-color:var(--g);font-weight:700}
+.dng{color:var(--rd)}
+.lnk{min-height:0;border:0;background:none;color:var(--g);text-decoration:underline;padding:0;font-size:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,.sheet:focus-visible{outline:3px solid #2fb37a;outline-offset:2px}
+h3{font-size:15px;margin:18px 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px;gap:8px}
+.top h2{margin:0;font-size:23px}
+.hero{background:linear-gradient(135deg,#0b5d3b,#0f8253);color:#fff;border-radius:20px;padding:20px;margin-bottom:6px}
+.hero p{margin:0;opacity:.85;font-size:14px}
+.hero h2{font-size:34px;margin:4px 0;line-height:1.1}
+.hero small{opacity:.85}
+.neg{color:#ffd2cd}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.kpi{background:var(--cd);border:1px solid var(--ln);border-radius:16px;padding:12px}
+.kpi p{margin:0;font-size:12px;color:var(--mut)}
+.kpi b{display:block;font-size:17px;margin:2px 0;word-break:break-word}
+.kpi small{font-size:11px;color:var(--mut)}
+.note{background:var(--gl);border-radius:12px;padding:10px 12px;font-size:13px;margin:10px 0}
+.warn{background:var(--al);color:var(--am)}
+.row{background:var(--cd);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:10px}
+.rt{display:flex;justify-content:space-between;gap:8px}
+.rs{font-size:13px;color:var(--mut);margin:2px 0 6px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--gl);color:var(--g);margin:0 4px 4px 0}
+.tag.red{background:var(--rl);color:var(--rd)}
+.tag.amb{background:var(--al);color:var(--am)}
+.dm{font-size:10px;border:1px dashed var(--mut);border-radius:4px;padding:0 4px;margin-left:6px;color:var(--mut);font-weight:600}
+.acts{display:flex;gap:8px;margin-top:6px}
+.acts button{flex:1;padding:0 6px}
+.ln{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--ln)}
+.ln.tot{font-weight:700}
+.bk .ln{border:0;padding:6px 0 3px}
+.bar{height:8px;background:var(--gl);border-radius:9px;overflow:hidden;margin-bottom:6px}
+.bar i{display:block;height:100%;background:var(--g)}
+.chart{display:flex;align-items:flex-end;gap:6px;height:96px;background:var(--cd);border:1px solid var(--ln);border-radius:14px;padding:10px 10px 6px}
+.chart div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;text-align:center;font-size:10px;color:var(--mut)}
+.chart i{display:block;background:var(--g);border-radius:5px 5px 0 0;min-height:2px}
+.empty{text-align:center;color:var(--mut);padding:28px 10px}
+#sh{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center}
+#sh[hidden]{display:none}
+.sheet{background:var(--cd);width:100%;max-width:640px;max-height:92%;overflow:auto;border-radius:20px 20px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.sh-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sh-h h2{margin:0;font-size:19px}
+.f{margin:12px 0}
+.f label{display:block;font-weight:600;font-size:14px;margin-bottom:4px}
+input,select{width:100%;min-height:46px;font-size:16px;font-family:inherit;border:1px solid var(--ln);border-radius:12px;padding:0 12px;background:var(--bg);color:var(--ink)}
+input[aria-invalid=true]{border-color:var(--rd)}
+.f small{display:block;color:var(--mut);font-size:12px;margin-top:3px}
+.err{display:block;color:var(--rd);font-size:13px;font-weight:600;margin-top:2px}
+.btns{display:flex;gap:10px;margin-top:14px}
+.btns button{flex:1}
+#ts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:#10201a;color:#fff;padding:10px 16px;border-radius:99px;font-size:14px;z-index:30;opacity:0;pointer-events:none;transition:opacity .2s;max-width:92%;text-align:center}
+#ts.on{opacity:1}
+@media(prefers-reduced-motion:reduce){#ts{transition:none}}
+
+@media print{header,nav,#sh,#ts,.no-print{display:none!important}body{background:#fff;color:#111}.print-area{display:block!important}main{max-width:none;padding:0}.row,.kpi{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><h1>KOMPTA</h1><span class="bd">Version de démonstration</span></header>
+<main id="mn" tabindex="-1"></main>
+<nav aria-label="Navigation principale">
+<button data-a="go" data-id="dash"><span aria-hidden="true">🏠</span>Accueil</button>
+<button data-a="go" data-id="sales"><span aria-hidden="true">🛒</span>Ventes</button>
+<button data-a="go" data-id="exp"><span aria-hidden="true">💸</span>Dépenses</button>
+<button data-a="go" data-id="cust"><span aria-hidden="true">👥</span>Clients</button>
+<button data-a="go" data-id="stock"><span aria-hidden="true">📦</span>Stock</button>
+<button data-a="go" data-id="rep"><span aria-hidden="true">📊</span>Rapports</button>
+<button data-a="go" data-id="plans"><span aria-hidden="true">💳</span>Forfaits</button>
+</nav>
+<div id="sh" hidden></div>
+<div id="ts" role="status" aria-live="polite"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nf=new Intl.NumberFormat("fr-FR");
+const F=n=>nf.format(Math.round(n||0))+" FCFA";
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const iso=x=>x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
+const ago=n=>{const d=new Date();d.setDate(d.getDate()-n);return iso(d)};
+const today=()=>iso(new Date());
+const fd=s=>s.split("-").reverse().join("/");
+const sum=(a,f)=>a.reduce((t,x)=>t+f(x),0);
+const num=v=>{const n=parseFloat(String(v).replace(/\s/g,"").replace(",","."));return isNaN(n)?NaN:n};
+const v=id=>$("#"+id).value.trim();
+const METHODS=["Espèces","Wave","Orange Money","MTN MoMo","Moov Money","Autre Mobile Money"];
+const GOODS="Achats de marchandises";
+const CATS=[GOODS,"Loyer","Transport","Électricité, eau, internet","Salaires","Communication","Autre charge"];
+const KEY="kompta.proto.v1";
+let S,view="dash",per="mois",onSub=null,lastFocus=null;
+
+function seed(){
+ const C=[["Awa Diallo","+221 77 000 00 01"],["Moussa Traoré","+225 07 000 00 02"],["Fatou Koné","+223 70 00 00 03"],["Ibrahim Sow","+224 62 00 00 04"]].map(([name,tel])=>({id:uid(),name,tel,demo:true}));
+ const P=[["Riz 25 kg",14500,16500,24,8],["Huile 5 L",5200,6000,15,5],["Sucre 1 kg",700,850,3,10],["Savon",250,350,60,20]].map(([name,buy,sell,stock,alert])=>({id:uid(),name,buy,sell,stock,alert,demo:true}));
+ const mk=(d,c,p,q,pd,m)=>{const r=P[p],amt=q*r.sell,a=pd==="all"?amt:pd;return{id:uid(),d:ago(d),cid:c==null?null:C[c].id,pid:r.id,pn:r.name,q,amt,cost:q*r.buy,pay:a>0?[{d:ago(d),a,m}]:[],demo:true}};
+ const sl=[mk(0,null,0,2,"all","Espèces"),mk(1,0,1,3,"all","Wave"),mk(2,1,0,4,30000,"Orange Money"),mk(3,null,3,10,"all","Espèces"),mk(4,2,2,12,0,"Espèces"),mk(6,null,1,2,"all","MTN MoMo"),mk(8,3,0,5,50000,"Wave"),mk(12,0,3,20,"all","Espèces"),mk(15,null,2,8,"all","Espèces"),mk(19,1,1,4,"all","Wave")];
+ sl.push({id:uid(),d:ago(10),cid:null,pid:null,pn:"Couture : robe sur mesure",q:1,amt:18000,cost:null,pay:[{d:ago(10),a:18000,m:"Orange Money"}],demo:true});
+ const X=[[20,"Réapprovisionnement riz et huile",GOODS,150000,"Espèces"],[14,"Loyer de la boutique","Loyer",40000,"Espèces"],[9,"Transport des marchandises","Transport",8500,"Orange Money"],[5,"Forfait internet","Électricité, eau, internet",5000,"Wave"],[2,"Aide en boutique","Salaires",30000,"Espèces"]].map(([d,l,cat,a,m])=>({id:uid(),d:ago(d),l,cat,a,m,demo:true}));
+ return{customers:C,products:P,sales:sl,expenses:X};
+}
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}return null}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast("Stockage indisponible : les données ne seront pas conservées.")}}
+S=load()||seed();save();
+
+const cust=id=>S.customers.find(c=>c.id===id), prod=id=>S.products.find(p=>p.id===id);
+const paid=s=>sum(s.pay,p=>p.a), due=s=>s.amt-paid(s);
+const custDebt=id=>sum(S.sales.filter(s=>s.cid===id),due);
+function calc(from){
+ const inP=d=>!from||d>=from;
+ const ss=S.sales.filter(s=>inP(s.d)),ex=S.expenses.filter(e=>inP(e.d));
+ const kn=ss.filter(s=>s.cost!=null);
+ const ca=sum(ss,s=>s.amt),cogs=sum(kn,s=>s.cost),marge=sum(kn,s=>s.amt-s.cost);
+ const charges=sum(ex.filter(e=>e.cat!==GOODS),e=>e.a),achats=sum(ex.filter(e=>e.cat===GOODS),e=>e.a);
+ const pays=S.sales.flatMap(s=>s.pay).filter(p=>inP(p.d));
+ const enc=sum(pays,p=>p.a),dec=sum(ex,e=>e.a);
+ return{ss,ex,pays,ca,cogs,marge,unk:ss.length-kn.length,caKnown:sum(kn,s=>s.amt),charges,achats,enc,dec,tres:enc-dec,res:marge-charges};
+}
+const kpi=(t,x,s)=>`<div class="kpi"><p>${t}</p><b>${x}</b><small>${s}</small></div>`;
+const ln=(l,x,c="")=>`<div class="ln ${c}"><span>${l}</span><b>${x}</b></div>`;
+const dm=o=>o.demo?`<span class="dm">DÉMO</span>`:"";
+const head=(t,a,l="+ Ajouter")=>`<div class="top"><h2>${t}</h2><button class="pri" data-a="${a}">${l}</button></div>`;
+const brk=(t,o)=>{const e=Object.entries(o).sort((a,b)=>b[1]-a[1]),m=e.length?e[0][1]:1;return`<h3>${t}</h3><div class="row">${e.length?e.map(([k,x])=>`<div class="bk"><div class="ln"><span>${esc(k)}</span><b>${F(x)}</b></div><div class="bar"><i style="width:${x/m*100}%"></i></div></div>`).join(""):`<span class="rs">Aucune donnée sur cette période.</span>`}</div>`};
+
+function vDash(){
+ const t=calc(null),m=calc(ago(29));
+ const debts=sum(S.sales,due),low=S.products.filter(p=>p.stock<=p.alert).length;
+ const demo=[...S.sales,...S.expenses,...S.customers,...S.products].some(x=>x.demo);
+ const days=[...Array(7)].map((_,i)=>{const d=ago(6-i);return{d,x:sum(S.sales.filter(s=>s.d===d),s=>s.amt)}});
+ const mx=Math.max(1,...days.map(o=>o.x));
+ return`<div class="top"><h2>Tableau de bord</h2></div>
+ ${demo?`<div class="note warn"><b>Données fictives de démonstration</b>, marquées « DÉMO ». <button class="lnk" data-a="clrdemo">Effacer la démo</button></div>`:""}
+ <section class="hero" aria-label="Trésorerie"><p>Solde de trésorerie</p><h2 class="${t.tres<0?"neg":""}">${F(t.tres)}</h2><small>Encaissements ${F(t.enc)} − décaissements ${F(t.dec)}, depuis le début des saisies</small></section>
+ <h3>30 derniers jours</h3>
+ <div class="grid">${kpi("Chiffre d’affaires",F(m.ca),"Total des ventes")}${kpi("Marge brute",F(m.marge),"Ventes − coût des marchandises")}${kpi("Charges",F(m.charges),"Hors achats de marchandises")}${kpi("Résultat estimé",F(m.res),"Marge − charges, avant impôts")}</div>
+ ${m.unk?`<div class="note warn">${m.unk} vente(s) sans coût connu : la marge et le résultat estimé sont incomplets.</div>`:""}
+ <div class="grid">${kpi("Dettes clients",F(debts),"À encaisser")}${kpi("Produits en stock bas",low,"Seuil d’alerte atteint")}</div>
+ <h3>Ventes des 7 derniers jours</h3>
+ <div class="chart" role="img" aria-label="Ventes par jour : ${days.map(o=>fd(o.d)+" "+F(o.x)).join(", ")}">${days.map(o=>`<div><i style="height:${Math.round(o.x/mx*70)}px"></i>${o.d.slice(8)}</div>`).join("")}</div>
+ <div class="note"><b>Attention :</b> le résultat estimé n’est pas un bénéfice net. Impôts, amortissements, rémunération de l’exploitant et pertes ne sont pas comptés. Prototype : données stockées uniquement sur cet appareil.</div>`;
+}
+function vSales(){
+ const l=[...S.sales].sort((a,b)=>b.d.localeCompare(a.d));
+ return head("Ventes","addsale")+(l.length?l.map(s=>{const c=cust(s.cid),r=due(s),lm=s.pay.length?s.pay[s.pay.length-1].m:"Non payé";
+  return`<article class="row"><div class="rt"><b>${esc(s.pn)}${s.q>1?" × "+s.q:""}${dm(s)}</b><b>${F(s.amt)}</b></div><div class="rs">${fd(s.d)} · ${esc(c?c.name:"Client de passage")} · ${esc(lm)}</div>
+  ${r>0?`<span class="tag red">Reste ${F(r)}</span>`:`<span class="tag">Payé</span>`}${s.cost==null?`<span class="tag amb">Coût inconnu</span>`:`<span class="tag">Marge ${F(s.amt-s.cost)}</span>`}
+  <div class="acts"><button data-a="invoice" data-id="${s.id}">Facture</button><button data-a="editsale" data-id="${s.id}">Modifier</button><button class="dng" data-a="del" data-t="sales" data-id="${s.id}">Supprimer</button></div></article>`}).join(""):`<p class="empty">Aucune vente. Touchez « + Ajouter » pour saisir la première.</p>`);
+}
+function vExp(){
+ const l=[...S.expenses].sort((a,b)=>b.d.localeCompare(a.d)),t=calc(null);
+ return head("Dépenses","addexp")+`<div class="grid">${kpi("Charges",F(t.charges),"Loyer, transport, salaires…")}${kpi("Achats de marchandises",F(t.achats),"Sortie d’argent, pas une charge")}</div>`+(l.length?l.map(e=>`<article class="row"><div class="rt"><b>${esc(e.l)}${dm(e)}</b><b>${F(e.a)}</b></div><div class="rs">${fd(e.d)} · ${esc(e.m)}</div><span class="tag ${e.cat===GOODS?"amb":""}">${esc(e.cat)}</span>
+  <div class="acts"><button data-a="editexp" data-id="${e.id}">Modifier</button><button class="dng" data-a="del" data-t="expenses" data-id="${e.id}">Supprimer</button></div></article>`).join(""):`<p class="empty">Aucune dépense saisie.</p>`);
+}
+function vCust(){
+ const l=[...S.customers].sort((a,b)=>custDebt(b.id)-custDebt(a.id));
+ return head("Clients et dettes","addcust")+`<div class="grid">${kpi("Dettes clients",F(sum(S.sales,due)),"Total à encaisser")}${kpi("Clients",S.customers.length,"Enregistrés")}</div>`+(l.length?l.map(c=>{const d=custDebt(c.id);return`<article class="row"><div class="rt"><b>${esc(c.name)}${dm(c)}</b>${d>0?`<span class="tag red">Dette ${F(d)}</span>`:`<span class="tag">À jour</span>`}</div><div class="rs">${esc(c.tel||"Pas de téléphone")}</div>
+  <div class="acts"><button data-a="cdet" data-id="${c.id}">Dettes</button><button data-a="editcust" data-id="${c.id}">Modifier</button><button class="dng" data-a="del" data-t="customers" data-id="${c.id}">Supprimer</button></div></article>`}).join(""):`<p class="empty">Aucun client. Ajoutez-en un pour suivre ses dettes.</p>`);
+}
+function vStock(){
+ return head("Produits et stocks","addprod")+`<div class="grid">${kpi("Valeur du stock",F(sum(S.products,p=>p.stock*p.buy)),"Au prix d’achat")}${kpi("Produits",S.products.length,"Enregistrés")}</div>`+(S.products.length?S.products.map(p=>`<article class="row"><div class="rt"><b>${esc(p.name)}${dm(p)}</b><span class="tag ${p.stock<=p.alert?"red":""}">Stock : ${p.stock}</span></div><div class="rs">Achat ${F(p.buy)} · Vente ${F(p.sell)} · Marge unitaire ${F(p.sell-p.buy)}</div>${p.stock<=p.alert?`<span class="tag red">Stock bas (seuil ${p.alert})</span>`:""}
+  <div class="acts"><button data-a="editprod" data-id="${p.id}">Modifier</button><button class="dng" data-a="del" data-t="products" data-id="${p.id}">Supprimer</button></div></article>`).join(""):`<p class="empty">Aucun produit. Ajoutez vos articles pour suivre marge et stock.</p>`);
+}
+function vRep(){
+ const f=per==="mois"?today().slice(0,8)+"01":per==="tout"?null:ago(per==="7"?6:29),r=calc(f);
+ const byM={},byC={},byP={};
+ r.pays.forEach(p=>byM[p.m]=(byM[p.m]||0)+p.a);r.ex.forEach(e=>byC[e.cat]=(byC[e.cat]||0)+e.a);r.ss.forEach(s=>byP[s.pn]=(byP[s.pn]||0)+s.amt);
+ const tx=r.caKnown?Math.round(r.marge/r.caKnown*100):0;
+ return`<div class="top"><h2>Rapports</h2></div>
+ <div class="f"><label for="rp">Période</label><select id="rp">${[["mois","Ce mois-ci"],["7","7 derniers jours"],["30","30 derniers jours"],["tout","Tout"]].map(([k,l])=>`<option value="${k}" ${k===per?"selected":""}>${l}</option>`).join("")}</select></div>
+ <h3>Du chiffre d’affaires au résultat estimé</h3>
+ <div class="row">${ln("Chiffre d’affaires (ventes)",F(r.ca))}${ln("− Coût des marchandises vendues",F(r.cogs))}${ln("= Marge brute ("+tx+" %)",F(r.marge),"tot")}${ln("− Charges d’exploitation",F(r.charges))}${ln("= Résultat estimé avant impôts",F(r.res),"tot")}</div>
+ ${r.unk?`<div class="note warn">${r.unk} vente(s) sans coût connu (${F(r.ca-r.caKnown)}) sont exclues de la marge : le résultat est surévalué.</div>`:""}
+ <div class="note">Ce n’est <b>pas un bénéfice net</b> : impôts, amortissements, rémunération de l’exploitant, pertes et invendus ne sont pas pris en compte. Faites valider vos chiffres par un comptable.</div>
+ <h3>Trésorerie de la période</h3>
+ <div class="row">${ln("Encaissements (ventes payées)",F(r.enc))}${ln("Décaissements (dont achats "+F(r.achats)+")",F(r.dec))}${ln("Variation de trésorerie",F(r.tres),"tot")}${ln("Dettes clients (total actuel)",F(sum(S.sales,due)))}${ln("Valeur du stock (prix d’achat)",F(sum(S.products,p=>p.stock*p.buy)))}</div>
+ ${brk("Encaissements par mode de paiement",byM)}${brk("Dépenses par catégorie",byC)}${brk("Ventes par produit",byP)}
+ <h3>Outils et sauvegarde</h3>
+  <div class="row"><p class="rs">Télécharge une copie de tes données pour les conserver ou les transférer vers un autre appareil.</p><div class="acts"><button data-a="backup">Sauvegarder (JSON)</button><button data-a="csv">Exporter les ventes (CSV)</button></div><div class="acts"><button data-a="import">Restaurer une sauvegarde</button><button data-a="printreport">Imprimer le rapport</button></div><input id="importfile" type="file" accept="application/json,.json" hidden></div>
+  <div class="note warn">Les données restent enregistrées dans le navigateur de cet appareil. Il n’existe pas encore de compte utilisateur, de synchronisation cloud ni de sauvegarde automatique.</div>
+  <h3>Données de démonstration</h3><div class="acts"><button data-a="reseed">Recharger la démo</button><button class="dng" data-a="wipe">Tout effacer</button></div>`;
+}
+
+function vPlans(){
+ const plans=[
+  {id:'free',name:'Gratuit',price:0,annual:0,desc:'Pour découvrir KOMPTA et démarrer simplement.',features:['Tableau de bord','Ventes et dépenses','Clients et dettes','Gestion de stock de base','Sauvegarde manuelle'],cta:'Commencer gratuitement'},
+  {id:'essential',name:'Essentiel',price:2500,annual:25000,desc:'Pour les petites activités qui veulent mieux suivre leur argent.',features:['Tout le forfait Gratuit','Rapports détaillés','Suivi des dettes clients','Export CSV et sauvegarde','Historique des opérations'],cta:'Choisir Essentiel'},
+  {id:'pro',name:'Pro',price:5000,annual:50000,desc:'Pour piloter les stocks, les marges et la rentabilité.',features:['Tout le forfait Essentiel','Statistiques avancées','Suivi de rentabilité','Gestion avancée des stocks','Outils de pilotage'],cta:'Choisir Pro',popular:true},
+  {id:'business',name:'Business',price:10000,annual:100000,desc:'Pour les équipes et les activités en croissance.',features:['Tout le forfait Pro','Plusieurs utilisateurs','Plusieurs activités / points de vente','Gestion d’équipe','Assistance prioritaire'],cta:'Choisir Business'}
+ ];
+ return `<div class="top"><h2>Nos forfaits</h2><span class="tag">Sans engagement</span></div>
+ <section class="hero"><p>Votre activité mérite une gestion plus claire.</p><h2>Choisissez KOMPTA</h2><small>Commencez gratuitement, puis évoluez quand votre activité grandit. Tarifs affichés en FCFA.</small></section>
+ <div class="note"><b>Pourquoi passer à un forfait payant ?</b><br>Gagnez du temps, suivez vos performances, maîtrisez vos stocks et prenez vos décisions avec des chiffres plus clairs.</div>
+ <div class="grid" style="grid-template-columns:1fr 1fr">${plans.map(p=>`<article class="row" style="margin:0;${p.popular?'border:2px solid var(--g)':''}">${p.popular?'<span class="tag">Le plus choisi</span>':''}<h3 style="font-size:19px;margin:5px 0">${p.name}</h3><div style="font-size:24px;font-weight:800;color:var(--g)">${p.price?F(p.price):'Gratuit'}<small style="font-size:12px;color:var(--mut);font-weight:400">${p.price?'/ mois':''}</small></div><p class="rs">${p.desc}</p><ul style="padding-left:18px;font-size:13px;min-height:150px">${p.features.map(x=>`<li style="margin:7px 0">${x}</li>`).join('')}</ul><button class="pri" style="width:100%;font-size:13px" data-a="chooseplan" data-id="${p.id}">${p.cta}</button></article>`).join('')}</div>
+ <h3>Économisez avec le paiement annuel</h3><div class="row"><b>Deux mois offerts</b><p class="rs">Essentiel : 25 000 FCFA/an · Pro : 50 000 FCFA/an · Business : 100 000 FCFA/an. Le paiement annuel sera proposé lors de l’activation du paiement en ligne.</p></div>
+ <h3>Moyens de paiement prévus</h3><div class="row"><div class="grid">${[['🌊','Wave'],['🟠','Orange Money'],['🟡','MTN MoMo'],['🔵','Moov Money'],['💳','Visa / Mastercard']].map(([i,n])=>`<div class="kpi"><b>${i} ${n}</b><small>Prévu via une page de paiement sécurisée</small></div>`).join('')}</div><div class="note warn"><b>Paiement en ligne pas encore activé.</b><br>Les opérateurs sont prévus via CinetPay. Aucun paiement ne sera encaissé depuis cette version tant que le compte marchand, les clés API et les notifications de paiement ne seront pas configurés et testés. Ne transférez pas d’argent manuellement à un numéro affiché ici.</div></div>
+ <h3>Comment fonctionne l’abonnement ?</h3><div class="row">${[['1','Choisissez votre forfait','Comparez les fonctions et le prix.'],['2','Payez en sécurité','Vous serez redirigé vers le prestataire de paiement.'],['3','Activation automatique','KOMPTA activera les fonctions après confirmation serveur du paiement.'],['4','Suivez votre abonnement','Retrouvez la formule, la date de renouvellement et vos reçus.']].map(([n,t,d])=>`<div class="ln"><b>${n}. ${t}</b></div><p class="rs">${d}</p>`).join('')}</div>
+ <h3>Questions fréquentes</h3><div class="row"><b>Puis-je commencer gratuitement ?</b><p class="rs">Oui. Le forfait Gratuit est prévu sans paiement.</p><b>Comment mon forfait sera-t-il activé ?</b><p class="rs">Après confirmation du paiement par le prestataire, et non sur une simple capture d’écran.</p><b>Puis-je changer de forfait ?</b><p class="rs">Oui, les changements et renouvellements seront gérés depuis votre espace abonnement une fois les comptes utilisateurs activés.</p><b>Mes paiements seront-ils sécurisés ?</b><p class="rs">Les données de carte et les identifiants Mobile Money seront saisis chez le prestataire, jamais stockés dans KOMPTA.</p></div>
+ <p class="rs">Les tarifs et avantages sont une proposition de lancement. Les fonctions marquées comme prévues ne sont pas encore activées dans ce prototype.</p>`;
+}
+function choosePlan(id){
+ const names={free:'Gratuit',essential:'Essentiel',pro:'Pro',business:'Business'};
+ const prices={free:'0 FCFA',essential:'2 500 FCFA / mois',pro:'5 000 FCFA / mois',business:'10 000 FCFA / mois'};
+ sheet('Forfait '+(names[id]||''),`<p>Vous avez choisi <b>${esc(names[id]||'ce forfait')}</b>.</p><p class="rs">Tarif proposé : ${esc(prices[id]||'')}.</p><div class="note warn">Le paiement en ligne n’est pas encore connecté. Cette page présente les forfaits, mais elle ne peut pas encore encaisser ni activer un abonnement payant.</div><p class="rs">Les moyens prévus sont Wave, Orange Money, MTN MoMo, Moov Money et carte bancaire, sous réserve de validation par le prestataire.</p>`,null,'Fermer');
+}
+
+function render(){
+ const V={dash:vDash,sales:vSales,exp:vExp,cust:vCust,stock:vStock,rep:vRep,plans:vPlans};
+ $("#mn").innerHTML=V[view]();
+ document.querySelectorAll("nav button").forEach(b=>b.dataset.id===view?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
+}
+let tt;function toast(m){const t=$("#ts");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2800)}
+
+function sheet(title,body,sub,btn="Enregistrer"){
+ lastFocus=document.activeElement;onSub=sub;
+ $("#sh").innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="st" tabindex="-1"><div class="sh-h"><h2 id="st">${title}</h2><button type="button" data-a="close" aria-label="Fermer">✕</button></div><form id="fm" novalidate>${body}<div class="btns"><button type="button" data-a="close">${sub?"Annuler":"Fermer"}</button>${sub?`<button class="pri">${btn}</button>`:""}</div></form></div>`;
+ $("#sh").hidden=false;document.body.style.overflow="hidden";$("#sh .sheet").focus();
+}
+function close(){$("#sh").hidden=true;$("#sh").innerHTML="";document.body.style.overflow="";onSub=null;try{lastFocus&&lastFocus.focus()}catch(e){}}
+function ask(msg,cb,btn="Supprimer"){sheet("Confirmation",`<p>${msg}</p>`,()=>{close();cb()},btn)}
+const fld=(l,id,inner,h="")=>`<div class="f"><label for="${id}">${l}</label>${inner}${h?`<small>${h}</small>`:""}<span class="err" id="${id}e" role="alert"></span></div>`;
+const inp=(id,val="",ex="")=>`<input id="${id}" value="${esc(val)}" ${ex}>`;
+const sel=(id,opts,cur,ex="")=>`<select id="${id}" ${ex}>${opts.map(([k,l])=>`<option value="${esc(k)}" ${k===cur?"selected":""}>${esc(l)}</option>`).join("")}</select>`;
+const mOpts=METHODS.map(m=>[m,m]);
+function showErr(E){document.querySelectorAll(".err").forEach(e=>e.textContent="");document.querySelectorAll("[aria-invalid]").forEach(e=>e.removeAttribute("aria-invalid"));const k=Object.keys(E);k.forEach(i=>{$("#"+i+"e").textContent=E[i];$("#"+i).setAttribute("aria-invalid","true")});if(k.length)$("#"+k[0]).focus();return!k.length}
+const intOK=x=>Number.isInteger(x)&&x>=0;
+
+function saleForm(id){
+ const s=id?S.sales.find(x=>x.id===id):null,multi=s&&s.pay.length>1,lm=s&&s.pay.length?s.pay[s.pay.length-1].m:"Espèces";
+ sheet(s?"Modifier la vente":"Nouvelle vente",
+ fld("Date","sdt",inp("sdt",s?s.d:today(),'type="date"'))+
+ fld("Client","scl",sel("scl",[["","Client de passage"],...S.customers.map(c=>[c.id,c.name])],s?s.cid||"":""))+
+ fld("Produit","spr",sel("spr",[["","Sans produit (vente libre)"],...S.products.map(p=>[p.id,p.name+" (stock "+p.stock+")"])],s?s.pid||"":""))+
+ fld("Libellé (vente libre)","spn",inp("spn",s&&!s.pid?s.pn:"",'maxlength="60"'),"Ex. : service de coiffure, robe sur mesure")+
+ fld("Quantité","sq",inp("sq",s?s.q:1,'inputmode="numeric"'))+
+ fld("Montant total (FCFA)","sa",inp("sa",s?s.amt:"",'inputmode="numeric"'))+
+ fld("Coût des marchandises vendues (FCFA)","sc",inp("sc",s&&s.cost!=null?s.cost:"",'inputmode="numeric"'),"Rempli par le produit choisi. Vide = marge inconnue pour cette vente.")+
+ fld(multi?"Total encaissé (à modifier dans Clients et dettes)":"Montant encaissé maintenant (FCFA)","sd",inp("sd",s?paid(s):"",'inputmode="numeric" '+(multi?"disabled":"")+(s?' data-t="1"':"")),"Moins que le total = dette du client.")+
+ fld("Mode de paiement","sm",sel("sm",mOpts,lm,multi?"disabled":""),"Enregistré à la main : aucune connexion à Wave, Orange Money ou autre service."),
+ ()=>{
+  const d=v("sdt"),cid=v("scl")||null,pid=v("spr")||null,q=num(v("sq")),amt=num(v("sa")),cs=v("sc"),m=v("sm"),p=pid?prod(pid):null,E={};
+  if(!d)E.sdt="Choisissez une date.";
+  if(!(Number.isInteger(q)&&q>0))E.sq="Entrez une quantité entière supérieure à 0.";
+  if(!(amt>0))E.sa="Entrez un montant supérieur à 0.";
+  let cost=cs===""?(p&&q>0?p.buy*q:null):num(cs);
+  if(cost!==null&&!(cost>=0))E.sc="Entrez un coût valide (0 ou plus) ou laissez vide.";
+  const pd=multi?paid(s):(v("sd")===""?amt:num(v("sd")));
+  if(!(pd>=0))E.sd="Entrez un montant valide.";else if(pd>amt)E.sd="L’encaissement ne peut pas dépasser le total.";else if(pd<amt&&!cid)E.sd="Choisissez un client pour enregistrer une dette.";
+  if(!p&&!v("spn"))E.spn="Indiquez un libellé ou choisissez un produit.";
+  if(p&&q>0){const av=p.stock+(s&&s.pid===p.id?s.q:0);if(q>av)E.sq="Stock insuffisant : "+av+" disponible(s).";}
+  if(!showErr(E))return;
+  if(s&&s.pid){const o=prod(s.pid);if(o)o.stock+=s.q}
+  if(p)p.stock-=q;
+  const rec={id:s?s.id:uid(),d,cid,pid,pn:p?p.name:v("spn"),q,amt,cost,pay:multi?s.pay:(pd>0?[{d,a:pd,m}]:[]),demo:false};
+  s?Object.assign(s,rec):S.sales.push(rec);
+  save();close();render();toast("Vente enregistrée.");
+ });
+}
+function expForm(id){
+ const e=id?S.expenses.find(x=>x.id===id):null;
+ sheet(e?"Modifier la dépense":"Nouvelle dépense",
+ fld("Date","edt",inp("edt",e?e.d:today(),'type="date"'))+
+ fld("Libellé","el",inp("el",e?e.l:"",'maxlength="60"'),"Ex. : loyer, transport, achat de riz")+
+ fld("Catégorie","ec",sel("ec",CATS.map(c=>[c,c]),e?e.cat:"Autre charge"),"« Achats de marchandises » sort de la trésorerie mais n’est pas une charge : le coût apparaît dans la marge à la vente. Mettez le stock à jour dans Produits.")+
+ fld("Montant (FCFA)","ea",inp("ea",e?e.a:"",'inputmode="numeric"'))+
+ fld("Mode de paiement","em",sel("em",mOpts,e?e.m:"Espèces")),
+ ()=>{const E={},a=num(v("ea"));
+  if(!v("edt"))E.edt="Choisissez une date.";if(!v("el"))E.el="Indiquez un libellé.";if(!(a>0))E.ea="Entrez un montant supérieur à 0.";
+  if(!showErr(E))return;
+  const rec={id:e?e.id:uid(),d:v("edt"),l:v("el"),cat:v("ec"),a,m:v("em"),demo:false};
+  e?Object.assign(e,rec):S.expenses.push(rec);save();close();render();toast("Dépense enregistrée.");});
+}
+function custForm(id){
+ const c=id?cust(id):null;
+ sheet(c?"Modifier le client":"Nouveau client",
+ fld("Nom","cn",inp("cn",c?c.name:"",'maxlength="60" autocomplete="off"'))+fld("Téléphone (facultatif)","ct",inp("ct",c?c.tel:"",'type="tel" maxlength="25"')),
+ ()=>{const E={};if(!v("cn"))E.cn="Indiquez le nom du client.";if(!showErr(E))return;
+  const rec={id:c?c.id:uid(),name:v("cn"),tel:v("ct"),demo:false};c?Object.assign(c,rec):S.customers.push(rec);save();close();render();toast("Client enregistré.");});
+}
+function prodForm(id){
+ const p=id?prod(id):null;
+ sheet(p?"Modifier le produit":"Nouveau produit",
+ fld("Nom du produit","pn",inp("pn",p?p.name:"",'maxlength="60"'))+
+ fld("Prix d’achat unitaire (FCFA)","pb",inp("pb",p?p.buy:"",'inputmode="numeric"'),"Sert à calculer la marge.")+
+ fld("Prix de vente unitaire (FCFA)","ps",inp("ps",p?p.sell:"",'inputmode="numeric"'))+
+ fld("Stock actuel","pk",inp("pk",p?p.stock:0,'inputmode="numeric"'))+
+ fld("Seuil d’alerte de stock","pa",inp("pa",p?p.alert:5,'inputmode="numeric"')),
+ ()=>{const E={},b=num(v("pb")),s=num(v("ps")),k=num(v("pk")),a=num(v("pa"));
+  if(!v("pn"))E.pn="Indiquez le nom du produit.";if(!(b>=0))E.pb="Entrez un prix d’achat (0 ou plus).";if(!(s>=0))E.ps="Entrez un prix de vente (0 ou plus).";
+  if(!intOK(k))E.pk="Entrez un stock entier (0 ou plus).";if(!intOK(a))E.pa="Entrez un seuil entier (0 ou plus).";
+  if(!showErr(E))return;
+  const rec={id:p?p.id:uid(),name:v("pn"),buy:b,sell:s,stock:k,alert:a,demo:false};p?Object.assign(p,rec):S.products.push(rec);save();close();render();toast("Produit enregistré.");});
+}
+function payForm(sid){
+ const s=S.sales.find(x=>x.id===sid),r=due(s);
+ sheet("Encaisser un paiement",`<p>${esc(s.pn)} · reste à payer : <b>${F(r)}</b></p>`+
+ fld("Date","yd",inp("yd",today(),'type="date"'))+fld("Montant reçu (FCFA)","ya",inp("ya",r,'inputmode="numeric"'))+fld("Mode de paiement","ym",sel("ym",mOpts,"Espèces"),"Enregistré à la main."),
+ ()=>{const E={},a=num(v("ya"));if(!v("yd"))E.yd="Choisissez une date.";if(!(a>0))E.ya="Entrez un montant supérieur à 0.";else if(a>r)E.ya="Le montant dépasse le reste à payer.";
+  if(!showErr(E))return;s.pay.push({d:v("yd"),a,m:v("ym")});save();close();render();toast("Paiement enregistré.");},"Encaisser");
+}
+function custDetail(id){
+ const c=cust(id),l=S.sales.filter(s=>s.cid===id&&due(s)>0);
+ sheet(esc(c.name),(c.tel?`<p>${esc(c.tel)}</p>`:"")+(l.length?l.map(s=>`<div class="row"><div class="rt"><b>${esc(s.pn)}</b><b>${F(due(s))}</b></div><div class="rs">${fd(s.d)} · total ${F(s.amt)}</div><button class="pri" data-a="pay" data-id="${s.id}">Encaisser un paiement</button></div>`).join(""):`<p class="empty">Aucune dette en cours.</p>`),null);
+}
+function del(t,id){
+ if(t==="customers"&&custDebt(id)>0)return toast("Suppression impossible : ce client a une dette en cours.");
+ const w={sales:"cette vente",expenses:"cette dépense",customers:"ce client",products:"ce produit"}[t];
+ ask("Supprimer "+w+" ? Cette action est définitive.",()=>{
+  if(t==="sales"){const s=S.sales.find(x=>x.id===id),p=s&&s.pid&&prod(s.pid);if(p)p.stock+=s.q}
+  if(t==="customers")S.sales.forEach(s=>{if(s.cid===id)s.cid=null});
+  if(t==="products")S.sales.forEach(s=>{if(s.pid===id)s.pid=null});
+  S[t]=S[t].filter(x=>x.id!==id);save();render();toast("Supprimé.");});
+}
+
+function downloadFile(name,content,type){
+ const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function backup(){
+ const payload={app:"KOMPTA",format:2,exportedAt:new Date().toISOString(),data:S};
+ downloadFile("kompta-sauvegarde-"+today()+".json",JSON.stringify(payload,null,2),"application/json");toast("Sauvegarde téléchargée.");
+}
+function csvExport(){
+ const rows=[["Date","Client","Libellé","Quantité","Montant FCFA","Coût FCFA","Encaissé FCFA","Reste dû FCFA","Mode de paiement"]];
+ S.sales.forEach(s=>{const c=cust(s.cid);rows.push([s.d,c?c.name:"Client de passage",s.pn,s.q,s.amt,s.cost==null?"":s.cost,paid(s),due(s),s.pay.map(p=>p.m).join(" / ")])});
+ const csv="\ufeff"+rows.map(r=>r.map(x=>'"'+String(x??"").replace(/"/g,'""')+'"').join(";")).join("\r\n");
+ downloadFile("kompta-ventes-"+today()+".csv",csv,"text/csv;charset=utf-8");toast("Export CSV téléchargé.");
+}
+function importBackup(file){
+ const reader=new FileReader();reader.onload=()=>{try{
+  const raw=JSON.parse(reader.result),d=raw&&raw.data?raw.data:raw;
+  if(!d||!["customers","products","sales","expenses"].every(k=>Array.isArray(d[k])))throw Error("format");
+  const ok=d.customers.every(x=>x&&typeof x.id==="string"&&typeof x.name==="string")&&d.products.every(x=>x&&typeof x.id==="string"&&typeof x.name==="string"&&Number.isFinite(x.stock))&&d.sales.every(x=>x&&typeof x.id==="string"&&Number.isFinite(x.amt)&&Array.isArray(x.pay))&&d.expenses.every(x=>x&&typeof x.id==="string"&&Number.isFinite(x.a));
+  if(!ok)throw Error("data");
+  ask("Remplacer les données actuellement présentes par cette sauvegarde ? Télécharge une sauvegarde actuelle avant de continuer si nécessaire.",()=>{S={customers:d.customers,products:d.products,sales:d.sales,expenses:d.expenses};save();render();toast("Sauvegarde restaurée.");},"Restaurer");
+ }catch(e){toast("Fichier invalide ou sauvegarde KOMPTA incompatible.");}};reader.onerror=()=>toast("Impossible de lire ce fichier.");reader.readAsText(file);
+}
+function invoice(id){
+ const s=S.sales.find(x=>x.id===id);if(!s)return;
+ const c=cust(s.cid),html=`<!doctype html><html lang="fr"><meta charset="utf-8"><title>Facture KOMPTA</title><style>body{font:15px Arial,sans-serif;color:#17231c;max-width:760px;margin:40px auto;padding:20px}h1{color:#0b5d3b}small{color:#66756b}.line{display:flex;justify-content:space-between;border-bottom:1px solid #ddd;padding:12px 0}.total{font-size:22px;font-weight:bold}.foot{margin-top:40px;color:#66756b;font-size:12px}@media print{button{display:none}}</style><h1>KOMPTA</h1><h2>Reçu de vente</h2><p><b>Référence :</b> ${esc(s.id.slice(-8).toUpperCase())}<br><b>Date :</b> ${fd(s.d)}<br><b>Client :</b> ${esc(c?c.name:"Client de passage")}</p><div class="line"><span>${esc(s.pn)} × ${s.q}</span><b>${F(s.amt)}</b></div><div class="line"><span>Montant encaissé</span><b>${F(paid(s))}</b></div><div class="line"><span>Reste à payer</span><b>${F(due(s))}</b></div><p class="line total"><span>Total</span><span>${F(s.amt)}</span></p><p>Merci pour votre confiance.</p><div class="foot">Document généré par le prototype KOMPTA. Ce reçu n’est pas une facture fiscale certifiée.</div><script>window.onload=()=>window.print()<\/script></html>`;
+ const w=window.open("","_blank");if(!w){toast("Autorise les fenêtres surgissantes pour imprimer le reçu.");return;}w.document.open();w.document.write(html);w.document.close();
+}
+
+const A={
+ go:(i)=>{view=i;render();scrollTo(0,0)},close,chooseplan:choosePlan,
+ addsale:()=>saleForm(),editsale:saleForm,addexp:()=>expForm(),editexp:expForm,addcust:()=>custForm(),editcust:custForm,addprod:()=>prodForm(),editprod:prodForm,
+ cdet:custDetail,pay:payForm,invoice,backup,csv:csvExport,printreport:()=>window.print(),import:()=>$("#importfile").click(),
+ clrdemo:()=>ask("Effacer toutes les données de démonstration ? Vos propres saisies sont conservées.",()=>{
+  ["customers","products","sales","expenses"].forEach(k=>S[k]=S[k].filter(x=>!x.demo));
+  S.sales.forEach(s=>{if(s.cid&&!cust(s.cid))s.cid=null;if(s.pid&&!prod(s.pid))s.pid=null});save();render();toast("Démo effacée.")},"Effacer"),
+ reseed:()=>ask("Remplacer toutes vos données par la démonstration ?",()=>{S=seed();save();render();toast("Démo rechargée.")},"Remplacer"),
+ wipe:()=>ask("Effacer toutes les données de ce prototype ?",()=>{S={customers:[],products:[],sales:[],expenses:[]};save();render();toast("Données effacées.")},"Tout effacer")
+};
+document.addEventListener("click",e=>{
+ if(e.target.id==="sh")return close();
+ const b=e.target.closest("[data-a]");if(!b)return;
+ const a=b.dataset.a;if(a==="del")del(b.dataset.t,b.dataset.id);else if(A[a])A[a](b.dataset.id);
+});
+document.addEventListener("submit",e=>{e.preventDefault();onSub&&onSub()});
+document.addEventListener("change",e=>{if(e.target.id==="importfile"&&e.target.files&&e.target.files[0]){importBackup(e.target.files[0]);e.target.value=""}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#sh").hidden)close()});
+function syncPaid(){const d=$("#sd");if(d&&!d.dataset.t&&!d.disabled)d.value=$("#sa").value}
+["input","change"].forEach(ev=>document.addEventListener(ev,e=>{
+ const i=e.target.id;
+ if(i==="rp"&&ev==="change"){per=e.target.value;render();return}
+ if(i==="spr"||i==="sq"){const p=prod($("#spr").value),q=num($("#sq").value);if(p&&q>0){$("#sa").value=p.sell*q;$("#sc").value=p.buy*q;syncPaid()}}
+ if(i==="sa")syncPaid();
+ if(i==="sd")e.target.dataset.t="1";
+}));
+render();
+</script>
+</body>
+</html>
